@@ -1,6 +1,5 @@
 package hu.gde.hzoxye.alkfte.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import hu.gde.hzoxye.alkfte.model.Runner;
 import hu.gde.hzoxye.alkfte.repository.RunnerRepository;
 import hu.gde.hzoxye.alkfte.types.Gender;
