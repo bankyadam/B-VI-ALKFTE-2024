@@ -1,5 +1,6 @@
 package hu.gde.hzoxye.alkfte.controller;
 
+import hu.gde.hzoxye.alkfte.controller.dto.RunnerDto;
 import hu.gde.hzoxye.alkfte.model.Runner;
 import hu.gde.hzoxye.alkfte.repository.RunnerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,7 @@ public class RunnersController {
     }
 
     @PostMapping("/addRunner")
-    ResponseEntity<Runner> addRunner(@RequestBody Runner newRunner) {
+    ResponseEntity<Runner> addRunner(@RequestBody RunnerDto newRunner) {
         try {
             Runner runner = runnerRepository.save(new Runner(newRunner.getName(), newRunner.getAge(), newRunner.getGender()));
             return new ResponseEntity<>(runner, HttpStatus.CREATED);
