@@ -3,7 +3,7 @@ package hu.gde.hzoxye.alkfte.controller.dto;
 public class ResultDto {
     private Long raceId;
     private Long runnerId;
-    private Number result;
+    private Integer result;
 
     public Long getRaceId() { return raceId; }
     public void setRaceId(Long id) { this.raceId = id; }
@@ -11,6 +11,6 @@ public class ResultDto {
     public Long getRunnerId() { return runnerId; }
     public void setRunnerId(Long id) { this.runnerId = id; }
 
-    public Number getResult() { return result; }
-    public void setResult(Number result) { this.result = result; }
+    public Integer getResult() { return result; }
+    public void setResult(Integer result) { this.result = result; }
 }

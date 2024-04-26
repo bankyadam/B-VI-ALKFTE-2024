@@ -29,12 +29,12 @@ public class Result extends AbstractPersistable<Long> {
     private Runner runner;
 
     @Column(name = "result", nullable = false)
-    private Number result;
+    private Integer result;
 
     public Result() {
     }
 
-    public Result(Race race, Runner runner, Number result) {
+    public Result(Race race, Runner runner, Integer result) {
         this.race = race;
         this.runner = runner;
         this.result = result;
@@ -60,11 +60,11 @@ public class Result extends AbstractPersistable<Long> {
         this.runner = runner;
     }
 
-    public Number getResult() {
+    public Integer getResult() {
         return result;
     }
 
-    public void setResult(Number result) {
+    public void setResult(Integer result) {
         this.result = result;
     }
 
