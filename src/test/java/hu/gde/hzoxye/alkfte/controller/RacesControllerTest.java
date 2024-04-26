@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -93,4 +94,15 @@ class RacesControllerTest {
         assertEquals(resultRepository.findAll().size(), 0);
     }
 
+    @Test
+    void addRace_RaceNotExists_Creates() throws Exception {
+        this.mockMvc.perform(post("/addRace")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"name\":\"Race name\",\"distance\":42}")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id").isNumber())
+                .andExpect(jsonPath("$.name").value("Race name"))
+                .andExpect(jsonPath("$.distance").value(42));
+    }
 }

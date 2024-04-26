@@ -1,5 +1,6 @@
 package hu.gde.hzoxye.alkfte.controller;
 
+import hu.gde.hzoxye.alkfte.controller.dto.RaceDto;
 import hu.gde.hzoxye.alkfte.controller.dto.ResultDto;
 import hu.gde.hzoxye.alkfte.model.Race;
 import hu.gde.hzoxye.alkfte.model.Result;
@@ -25,8 +26,18 @@ public class RacesController {
     @Autowired
     private ResultRepository resultRepository;
 
+    @PostMapping("/addRace")
+    ResponseEntity<Race> addRace(@RequestBody RaceDto newRace) {
+        try {
+            Race race = raceRepository.save(new Race(newRace.getName(), newRace.getDistance()));
+            return new ResponseEntity<>(race, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @PostMapping("/addResult")
-    ResponseEntity<Race> addResult(@RequestBody ResultDto result) {
+    ResponseEntity<Result> addResult(@RequestBody ResultDto result) {
         try {
             Optional<Race> race = raceRepository.findById(result.getRaceId());
             Optional<Runner> runner = runnerRepository.findById(result.getRunnerId());
