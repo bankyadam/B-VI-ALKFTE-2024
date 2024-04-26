@@ -1,7 +1,9 @@
 package hu.gde.hzoxye.alkfte.controller;
 
 import hu.gde.hzoxye.alkfte.controller.dto.RaceDto;
+import hu.gde.hzoxye.alkfte.controller.responseItem.RaceRunnerResponseItem;
 import hu.gde.hzoxye.alkfte.model.Race;
+import hu.gde.hzoxye.alkfte.model.Result;
 import hu.gde.hzoxye.alkfte.repository.RaceRepository;
 import hu.gde.hzoxye.alkfte.repository.ResultRepository;
 import hu.gde.hzoxye.alkfte.repository.RunnerRepository;
@@ -10,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Optional;
 
 @RestController
@@ -45,4 +49,27 @@ public class RacesController {
         return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 
+    @GetMapping("/getRaceRunners/{id}")
+    ResponseEntity<ArrayList<RaceRunnerResponseItem>> getRaceRunners(@PathVariable(value = "id") Long raceId) {
+        Optional<Race> race = raceRepository.findById(raceId);
+        if (race.isPresent()) {
+            ArrayList<Result> results = new ArrayList<>(resultRepository.findByRaceId(race.get().getId()));
+
+            if (results.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+
+            ArrayList<RaceRunnerResponseItem> runners = new ArrayList<>();
+
+            results.forEach(result -> {
+                runners.add(new RaceRunnerResponseItem(result.getRunner().getName(), result.getResult()));
+            });
+
+            runners.sort(Comparator.comparingInt(RaceRunnerResponseItem::getResult));
+
+            return new ResponseEntity<>(runners, HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+    }
 }
