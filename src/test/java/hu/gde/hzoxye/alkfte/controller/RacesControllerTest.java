@@ -67,6 +67,24 @@ class RacesControllerTest {
     }
 
     @Test
+    void getRaces_NoRace_ReturnsNoContent() throws Exception {
+        this.mockMvc.perform(get("/getRaces"))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void getRaces_HaveRace_ReturnsListOfRaces() throws Exception {
+        raceRepository.saveAll(List.of(
+                new Race("Race 1", 12),
+                new Race("Race 2", 23),
+                new Race("Race 3", 34)
+        ));
+        this.mockMvc.perform(get("/getRaces"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[*]", hasSize(3)));
+    }
+
+    @Test
     void getRaceRunners_RaceNotExists_ReturnsNotFound() throws Exception {
         this.mockMvc.perform(get("/getRaceRunners/1234"))
                 .andExpect(status().isNotFound());

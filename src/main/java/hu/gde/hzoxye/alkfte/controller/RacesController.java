@@ -49,6 +49,17 @@ public class RacesController {
         return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 
+    @GetMapping("/getRaces")
+    ResponseEntity<ArrayList<Race>> getRaces() {
+        ArrayList<Race> races = new ArrayList<>(raceRepository.findAll());
+
+        if (races.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+
+        return new ResponseEntity<>(races, HttpStatus.OK);
+    }
+
     @GetMapping("/getRaceRunners/{id}")
     ResponseEntity<ArrayList<RaceRunnerResponseItem>> getRaceRunners(@PathVariable(value = "id") Long raceId) {
         Optional<Race> race = raceRepository.findById(raceId);
@@ -88,7 +99,8 @@ public class RacesController {
                     .average()
                     .orElse(0);
 
-            return new ResponseEntity<>(average, HttpStatus.OK);        }
+            return new ResponseEntity<>(average, HttpStatus.OK);
+        }
 
         return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
