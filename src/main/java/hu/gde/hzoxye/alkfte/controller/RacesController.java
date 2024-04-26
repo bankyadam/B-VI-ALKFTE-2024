@@ -36,6 +36,18 @@ public class RacesController {
         }
     }
 
+    @PostMapping("/updateRace")
+    ResponseEntity<Race> updateRace(@RequestBody RaceDto existingRace) {
+        Optional<Race> race = raceRepository.findById(existingRace.getId());
+        if (race.isPresent()) {
+            race.get().setName(existingRace.getName());
+            race.get().setDistance(existingRace.getDistance());
+            Race updatedRace = raceRepository.save(race.get());
+            return new ResponseEntity<>(updatedRace, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+    }
+
     @PostMapping("/addResult")
     ResponseEntity<Result> addResult(@RequestBody ResultDto newResult) {
         try {

@@ -105,4 +105,18 @@ class RacesControllerTest {
                 .andExpect(jsonPath("$.name").value("Race name"))
                 .andExpect(jsonPath("$.distance").value(42));
     }
+
+    @Test
+    void updateRace_RaceExists_Updates() throws Exception {
+        Race race = raceRepository.save(new Race("Race name", 40));
+        this.mockMvc.perform(post("/updateRace")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"id\":"+race.getId()+",\"name\":\"New Race Name\",\"distance\":42}")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(race.getId()))
+                .andExpect(jsonPath("$.name").value("New Race Name"))
+                .andExpect(jsonPath("$.distance").value(42));
+    }
+
 }
