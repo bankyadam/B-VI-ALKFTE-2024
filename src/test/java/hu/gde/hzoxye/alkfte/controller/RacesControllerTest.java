@@ -20,8 +20,7 @@ import java.util.List;
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -103,4 +102,35 @@ class RacesControllerTest {
                 .andExpect(jsonPath("$[2].name").value("Chloe"));
     }
 
+    @Test
+    void getAverageTime_RaceNotExists_ReturnsNotFound() throws Exception {
+        this.mockMvc.perform(get("/getAverageTime/123"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void getAverageTime_RaceExistsNoResults_ReturnsNoContent() throws Exception {
+        Race race = raceRepository.save(new Race("Race name", 40));
+        this.mockMvc.perform(get("/getAverageTime/{id}", race.getId()))
+                .andExpect(status().isNoContent());
+    }
+
+    void getAverageTime_RaceExistsWithRunners_ReturnsAverage() throws Exception {
+        Race race = raceRepository.save(new Race("Race name", 40));
+
+        Runner runner1 = runnerRepository.save(new Runner("Adam", 42, Gender.MALE));
+        Runner runner2 = runnerRepository.save(new Runner("Ben", 18, Gender.MALE));
+        Runner runner3 = runnerRepository.save(new Runner("Chloe", 25, Gender.FEMALE));
+
+        resultRepository.saveAll(List.of(
+                new Result(race, runner1, 1),
+                new Result(race, runner2, 2),
+                new Result(race, runner3, 3)
+        ));
+
+        this.mockMvc.perform(get("/getAverageTime/{id}", race.getId())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().json("2"));
+    }
 }

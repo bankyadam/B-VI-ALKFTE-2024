@@ -72,4 +72,25 @@ public class RacesController {
 
         return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
+
+    @GetMapping("/getAverageTime/{id}")
+    ResponseEntity<Double> getAverageTime(@PathVariable(value = "id") Long raceId) {
+        Optional<Race> race = raceRepository.findById(raceId);
+        if (race.isPresent()) {
+            ArrayList<Result> results = new ArrayList<>(resultRepository.findByRaceId(race.get().getId()));
+
+            if (results.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+
+            Double average = results.stream()
+                    .mapToInt(Result::getResult)
+                    .average()
+                    .orElse(0);
+
+            return new ResponseEntity<>(average, HttpStatus.OK);        }
+
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+    }
+
 }
