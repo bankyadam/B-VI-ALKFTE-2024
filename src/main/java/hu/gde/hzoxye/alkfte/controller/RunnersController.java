@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 @RequestMapping(path = "/", produces = "application/json")
@@ -19,8 +18,8 @@ public class RunnersController {
     RunnerRepository runnerRepository;
 
     @GetMapping("/getRunners")
-    ResponseEntity<List<Runner>> getRunners() {
-        List<Runner> runners = new ArrayList<>(runnerRepository.findAll());
+    ResponseEntity<ArrayList<Runner>> getRunners() {
+        ArrayList<Runner> runners = new ArrayList<>(runnerRepository.findAll());
 
         if (runners.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
