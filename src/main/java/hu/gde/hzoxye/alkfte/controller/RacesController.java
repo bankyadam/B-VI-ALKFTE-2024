@@ -37,13 +37,13 @@ public class RacesController {
     }
 
     @PostMapping("/addResult")
-    ResponseEntity<Result> addResult(@RequestBody ResultDto result) {
+    ResponseEntity<Result> addResult(@RequestBody ResultDto newResult) {
         try {
-            Optional<Race> race = raceRepository.findById(result.getRaceId());
-            Optional<Runner> runner = runnerRepository.findById(result.getRunnerId());
+            Optional<Race> race = raceRepository.findById(newResult.getRaceId());
+            Optional<Runner> runner = runnerRepository.findById(newResult.getRunnerId());
             if (race.isPresent() && runner.isPresent()) {
-                resultRepository.save(new Result(race.get(), runner.get(), result.getResult()));
-                return new ResponseEntity<>(null, HttpStatus.CREATED);
+                Result result = resultRepository.save(new Result(race.get(), runner.get(), newResult.getResult()));
+                return new ResponseEntity<>(result, HttpStatus.CREATED);
             }
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         } catch (Exception e) {
