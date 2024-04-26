@@ -65,6 +65,7 @@ class RunnersControllerTest {
                         .content("{\"name\":\"Adam\",\"age\":42,\"gender\":\"MALE\"}")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id").isNumber())
                 .andExpect(jsonPath("$.name").value("Adam"))
                 .andExpect(jsonPath("$.age").value(42))
                 .andExpect(jsonPath("$.gender").value(Gender.MALE.toString()));
